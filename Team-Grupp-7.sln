@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Team-Grupp-7.CSharp", "Team-Grupp-7.CSharp.csproj", "{B37AE309-AA80-CB42-09E6-E489D950DDA2}"
 EndProject
 Global
