@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/Base level.unity
+- path: Assets/Scene/Mextrin_Scene.unity
   isLoaded: 1
   isActive: 1

@@ -4,7 +4,7 @@ using System.Collections;
 public class changeTrigger : MonoBehaviour
 {
 
-    playerControls playerScript;
+    CharacterController playerScript;
     SpriteRenderer renderer;
 
     // Update is called once per frame
@@ -26,7 +26,7 @@ public class changeTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerScript = other.gameObject.GetComponent<playerControls>();
+            playerScript = other.gameObject.GetComponent<CharacterController>();
             playerScript.eventReady = true;
         }
     }
@@ -35,7 +35,7 @@ public class changeTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerScript = other.gameObject.GetComponent<playerControls>();
+            playerScript = other.gameObject.GetComponent<CharacterController>();
             playerScript.eventReady = false;
         }
     }

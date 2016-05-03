@@ -1,76 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class playerControls : MonoBehaviour
+public class PlayerControls : MonoBehaviour
 {
-    public float speed, jumpPower, gravity;
-    public Rigidbody2D rigidBody;
-    public int movement;
-    public bool isGrounded, eventReady;
-    private Vector2 direction = Vector2.zero;
+    public bool right, left, up;
 
-    public int rotation;
-    public GameObject mysticShot;
-    public float mysticShotDamage, mysticShotRange, mysticShotRate, mysticShotSpeed;
-    
+    // Use this for initialization
     void Start()
     {
-        
-    }
 
+    }
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
-        if (Input.GetKey(KeyCode.A))
-        {
-            movement = -1;
-            rotation = -1;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            movement = 1;
-            rotation = -1;
-        }
-        else
-        {
-            movement = 0;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject copy = Instantiate(mysticShot);
-        }
-
-    }
     void Update()
     {
-        if (isGrounded)
-        {
-            if (Input.GetKey(KeyCode.W))
-            {
-                direction.y = jumpPower;
+        if (Input.GetKeyDown(KeyCode.A))
+            left = true;
+        else if (Input.GetKeyUp(KeyCode.A))
+            left = false;
 
-            }
-            else
-                direction.y = 0;
-        }
-        else
-        {
-                direction.y -= gravity * Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.D))
+            right = true;
+        else if (Input.GetKeyUp(KeyCode.D))
+            right = false;
 
-        }
-
-        rigidBody.velocity = new Vector2(0, direction.y);
-        transform.Translate(Vector2.right * movement * speed * Time.deltaTime);
-    }
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Floor")
-            isGrounded = true;
-    }
-    void OnTriggerExit2D(Collider2D other)
-    {
-        isGrounded = false;
+        if (Input.GetKeyDown(KeyCode.W))
+            up = true;
+        else if (Input.GetKeyUp(KeyCode.W))
+            up = false;
     }
 }
