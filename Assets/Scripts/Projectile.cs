@@ -3,9 +3,8 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour
 {
-    public float damage, lifeTime, speed;
+    public float offset, lifeTime, speed;
     public int movement;
-    float direction;
 
     //public GameObject player;
     CharacterController spawner;
@@ -13,12 +12,12 @@ public class Projectile : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        transform.Translate(Vector2.right * movement * offset * Time.deltaTime);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector2.right * movement * speed * Time.deltaTime);
         Destroy(gameObject, lifeTime);
     }
 }

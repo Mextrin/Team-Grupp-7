@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 
 public class CharacterController : MonoBehaviour
 {
-    public float speed, jumpPower;
+    public float speed, jumpPower, distanceToGround;
     Rigidbody2D rigidbody;
     public int movement, prevMovement = 1;
     public bool isGrounded, eventReady;
@@ -51,6 +51,17 @@ public class CharacterController : MonoBehaviour
             copyScript.movement = prevMovement;
         }
 
+        Vector2 position = transform.position;
+        position.y += 0.1f;
+        Debug.DrawRay(position, -Vector2.up, Color.green, distanceToGround);
+        RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up, distanceToGround);
+        
+        if (hit.collider != null)
+            isGrounded = true;
+        else
+            isGrounded = false;
+
+
     }
     void Update()
     {
@@ -72,14 +83,5 @@ public class CharacterController : MonoBehaviour
 
         rigidbody.velocity = new Vector2(0, direction.y);
         transform.Translate(Vector2.right * movement * speed * Time.deltaTime);
-    }
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Floor")
-            isGrounded = true;
-    }
-    void OnTriggerExit2D(Collider2D other)
-    {
-        isGrounded = false;
     }
 }
