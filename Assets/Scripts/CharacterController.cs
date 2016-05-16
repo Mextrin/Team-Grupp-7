@@ -11,9 +11,10 @@ public class CharacterController : MonoBehaviour
     private Vector2 direction;
     public Transform ability;
     public GameObject mysticShot;
-    public float mysticShotDamage, mysticShotRange, mysticShotRate, mysticShotSpeed;
     public bool isAI;
+    public float cooldown;
     PlayerControls controller;
+    float toWait = 0;
 
     void Start()
     {
@@ -45,21 +46,16 @@ public class CharacterController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Projectile copyScript;
-            GameObject copy = (GameObject)Instantiate(mysticShot, transform.position, transform.rotation);
-            copyScript = copy.GetComponent<Projectile>();
-            copyScript.movement = prevMovement;
+            if (Time.time > toWait)
+            {
+                toWait = Time.time + cooldown;
+                Projectile copyScript;
+                GameObject copy = (GameObject)Instantiate(mysticShot, transform.position, transform.rotation);
+                copyScript = copy.GetComponent<Projectile>();
+                copyScript.movement = prevMovement;
+                copyScript.lifeTime = cooldown;
+            }
         }
-
-        Vector2 position = transform.position;
-        position.y += 0.1f;
-        Debug.DrawRay(position, -Vector2.up, Color.green, distanceToGround);
-        RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up, distanceToGround);
-        
-        if (hit.collider != null)
-            isGrounded = true;
-        else
-            isGrounded = false;
 
 
     }
@@ -70,7 +66,6 @@ public class CharacterController : MonoBehaviour
             if (Input.GetKey(KeyCode.W))
             {
                 direction.y = jumpPower;
-
             }
             else
                 direction.y = 0;
@@ -78,10 +73,25 @@ public class CharacterController : MonoBehaviour
         else
         {
                 direction.y -= rigidbody.mass * Time.deltaTime;
-
         }
 
         rigidbody.velocity = new Vector2(0, direction.y);
         transform.Translate(Vector2.right * movement * speed * Time.deltaTime);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Floor"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Floor"))
+        {
+            isGrounded = false;
+        }
     }
 }

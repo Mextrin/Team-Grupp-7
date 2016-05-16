@@ -3,8 +3,9 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour
 {
-    public float offset, lifeTime, speed;
+    public float offset, lifeTime;
     public int movement;
+    public int damage;
 
     //public GameObject player;
     CharacterController spawner;
@@ -20,4 +21,5 @@ public class Projectile : MonoBehaviour
     {
         Destroy(gameObject, lifeTime);
     }
+    
 }
