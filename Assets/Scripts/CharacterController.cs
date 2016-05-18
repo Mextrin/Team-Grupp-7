@@ -79,7 +79,7 @@ public class CharacterController : MonoBehaviour
         transform.Translate(Vector2.right * movement * speed * Time.deltaTime);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
         if (other.CompareTag("Floor"))
         {

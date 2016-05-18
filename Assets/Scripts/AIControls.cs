@@ -4,9 +4,14 @@ using System.Collections;
 public class AIControls : MonoBehaviour
 {
     Transform player;
-    int movement;
+    int movement, prevMovement;
+    public float attackRange, attackSpeed;
+    public float attackCooldown;
+    float toWait;
 
-    public float speed;
+    public GameObject shot;
+
+    public float movementSpeed;
 
     // Use this for initialization
     void Start()
@@ -22,6 +27,20 @@ public class AIControls : MonoBehaviour
         else
             movement = -1;
 
-        transform.Translate(Vector2.right * movement * speed * Time.deltaTime);
+        if (Vector2.Distance(player.position, transform.position) < attackRange)
+        {
+            if (Time.time > toWait)
+            {
+                toWait = Time.time + attackCooldown;
+                Projectile copyScript;
+                GameObject copy = (GameObject)Instantiate(shot, transform.position, transform.rotation);
+                copyScript = copy.GetComponent<Projectile>();
+                copyScript.movement = prevMovement;
+                copyScript.lifeTime = attackCooldown;
+                copyScript.speed = attackSpeed;
+            }
+        }
+
+        transform.Translate(Vector2.right * movement * movementSpeed * Time.deltaTime);
     }
 }
