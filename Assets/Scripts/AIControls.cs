@@ -22,22 +22,38 @@ public class AIControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.position.x > transform.position.x)
-            movement = 1;
-        else
-            movement = -1;
-
-        if (Vector2.Distance(player.position, transform.position) < attackRange)
+        if (Vector2.Distance(player.position, transform.position) > attackRange)
         {
+
+            if (player.position.x > transform.position.x)
+            {
+                movement = 1;
+                prevMovement = 1;
+            }
+            else
+            {
+                movement = -1;
+                prevMovement = -1;
+            }
+
+        }
+        else
+        {
+            movement = 0;
+
             if (Time.time > toWait)
             {
                 toWait = Time.time + attackCooldown;
+
                 Projectile copyScript;
                 GameObject copy = (GameObject)Instantiate(shot, transform.position, transform.rotation);
+                //Physics2D.IgnoreCollision(GetComponents<BoxCollider2D>()[0], copy.GetComponent<CircleCollider2D>());
+                //Physics2D.IgnoreCollision(GetComponents<BoxCollider2D>()[1], copy.GetComponent<CircleCollider2D>());
                 copyScript = copy.GetComponent<Projectile>();
-                copyScript.movement = prevMovement;
                 copyScript.lifeTime = attackCooldown;
                 copyScript.speed = attackSpeed;
+                copyScript.origin = gameObject;
+                copyScript.movement = prevMovement;
             }
         }
 

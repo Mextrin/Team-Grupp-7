@@ -54,6 +54,7 @@ public class CharacterController : MonoBehaviour
                 copyScript = copy.GetComponent<Projectile>();
                 copyScript.movement = prevMovement;
                 copyScript.lifeTime = cooldown;
+                copyScript.origin = gameObject;
             }
         }
 
