@@ -8,10 +8,11 @@ public class CharacterController : MonoBehaviour
     Rigidbody2D rigidbody;
     public int movement, prevMovement = 1;
     public bool isGrounded, eventReady;
-    private Vector2 direction;
+    public Vector2 direction;
+    public Vector3 spawnOffset;
     public Transform ability;
     public GameObject mysticShot;
-    public bool isAI;
+    public bool moveEffects;
     public float cooldown;
     PlayerControls controller;
     float toWait = 0;
@@ -27,7 +28,10 @@ public class CharacterController : MonoBehaviour
     {
         if ((Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D)) || !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
         {
-            movement = 0;
+            if (!moveEffects)
+            {
+                movement = 0;
+            }
         }
         else
         {
@@ -43,6 +47,7 @@ public class CharacterController : MonoBehaviour
                 prevMovement = 1;
             }
         }
+        
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -50,7 +55,7 @@ public class CharacterController : MonoBehaviour
             {
                 toWait = Time.time + cooldown;
                 Projectile copyScript;
-                GameObject copy = (GameObject)Instantiate(mysticShot, transform.position, transform.rotation);
+                GameObject copy = (GameObject)Instantiate(mysticShot, transform.position + spawnOffset * prevMovement, transform.rotation);
                 copyScript = copy.GetComponent<Projectile>();
                 copyScript.movement = prevMovement;
                 copyScript.lifeTime = cooldown;
@@ -70,29 +75,20 @@ public class CharacterController : MonoBehaviour
             }
             else
                 direction.y = 0;
+
+            if (direction.x != 0)
+            {
+                direction.x = 0;
+            }
         }
         else
         {
                 direction.y -= rigidbody.mass * Time.deltaTime;
         }
 
-        rigidbody.velocity = new Vector2(0, direction.y);
+        direction.x = movement * speed;
+
+        rigidbody.velocity = new Vector2(direction.x, direction.y);
         transform.Translate(Vector2.right * movement * speed * Time.deltaTime);
-    }
-
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.CompareTag("Floor"))
-        {
-            isGrounded = true;
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Floor"))
-        {
-            isGrounded = false;
-        }
     }
 }

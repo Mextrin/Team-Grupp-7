@@ -16,7 +16,11 @@ public class FollowTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        targetPosition = new Vector3(target.position.x, target.position.y, -10f);
+        if (target != null)
+        {
+            targetPosition = new Vector3(target.position.x, target.position.y, -10f);
+        }
+
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, timeToGoal);
     }
 }

@@ -4,12 +4,12 @@ using System.Collections;
 
 public class Health : MonoBehaviour
 {
-    public Gradient color;
+    public Gradient healthColor, regenCooldownColor;
     public float startHealth;
     float health;
     float timeBetweenHits;
     public float hitCooldown;
-    public Image healthBar;
+    public Image healthBar, cooldownBar;
     public float hpPerSec, outOfCombatCooldown;
     float healWaitTime, nextHeal;
 
@@ -22,14 +22,21 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (healthBar != null)
+        {
+            healthBar.fillAmount = health / startHealth;
+            healthBar.color = healthColor.Evaluate(health / startHealth);
+        }
+
+        if (cooldownBar != null)
+        {
+            cooldownBar.fillAmount = Mathf.Clamp(healWaitTime - Time.time, 0, outOfCombatCooldown) / outOfCombatCooldown;
+            cooldownBar.color = regenCooldownColor.Evaluate(Mathf.Clamp(healWaitTime - Time.time, 0, outOfCombatCooldown) / outOfCombatCooldown);
+        }
+
         if (health <= 0)
         {
             Destroy(gameObject);
-        }
-        else
-        {
-            healthBar.color = color.Evaluate(health / startHealth);
-            healthBar.fillAmount = (health / startHealth);
         }
 
         if (Time.time > healWaitTime)
@@ -79,8 +86,9 @@ public class Health : MonoBehaviour
                 if (Time.time > timeBetweenHits)
                 {
                     timeBetweenHits = Time.time + hitCooldown;
-                    health -= projectile.damage;
                     healWaitTime = Time.time + outOfCombatCooldown;
+
+                    health -= projectile.damage;
                 }
             }
         }

@@ -7,8 +7,9 @@ public class AIControls : MonoBehaviour
     int movement, prevMovement;
     public float attackRange, attackSpeed;
     public float attackCooldown;
+    public Vector3 spawnOffset = new Vector3(1.28f, 0);
     float toWait;
-
+    float distanceToTarget;
     public GameObject shot;
 
     public float movementSpeed;
@@ -22,41 +23,46 @@ public class AIControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Vector2.Distance(player.position, transform.position) > attackRange)
+        if (player != null)
         {
+
+            distanceToTarget = Vector2.Distance(player.position, transform.position);
 
             if (player.position.x > transform.position.x)
             {
-                movement = 1;
+                if (distanceToTarget > attackRange)
+                    movement = 1;
                 prevMovement = 1;
             }
             else
             {
-                movement = -1;
+                if (distanceToTarget > attackRange)
+                    movement = -1;
                 prevMovement = -1;
             }
 
-        }
-        else
-        {
-            movement = 0;
-
-            if (Time.time > toWait)
+            if (distanceToTarget <= attackRange)
             {
-                toWait = Time.time + attackCooldown;
+                movement = 0;
 
-                Projectile copyScript;
-                GameObject copy = (GameObject)Instantiate(shot, transform.position, transform.rotation);
-                //Physics2D.IgnoreCollision(GetComponents<BoxCollider2D>()[0], copy.GetComponent<CircleCollider2D>());
-                //Physics2D.IgnoreCollision(GetComponents<BoxCollider2D>()[1], copy.GetComponent<CircleCollider2D>());
-                copyScript = copy.GetComponent<Projectile>();
-                copyScript.lifeTime = attackCooldown;
-                copyScript.speed = attackSpeed;
-                copyScript.origin = gameObject;
-                copyScript.movement = prevMovement;
+                RaycastHit2D hit;
+                hit = Physics2D.Raycast(transform.position + spawnOffset * prevMovement, Vector2.right * prevMovement, attackRange);
+
+                if (hit.transform.gameObject == player.gameObject && Time.time > toWait)
+                {
+                    toWait = Time.time + attackCooldown;
+
+                    Projectile copyScript;
+                    GameObject copy = (GameObject)Instantiate(shot, transform.position + spawnOffset * prevMovement, transform.rotation);
+                    copyScript = copy.GetComponent<Projectile>();
+                    copyScript.lifeTime = attackCooldown;
+                    copyScript.speed = attackSpeed;
+                    copyScript.origin = gameObject;
+                    copyScript.movement = prevMovement;
+                }
             }
-        }
 
-        transform.Translate(Vector2.right * movement * movementSpeed * Time.deltaTime);
+            transform.Translate(Vector2.right * movement * movementSpeed * Time.deltaTime);
+        }
     }
 }
