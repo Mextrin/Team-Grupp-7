@@ -86,6 +86,8 @@ public class CharacterController : MonoBehaviour
                 direction.y -= rigidbody.mass * Time.deltaTime;
         }
 
+        transform.localScale = new Vector3(prevMovement * 2, 2, 1);
+
         direction.x = movement * speed;
 
         rigidbody.velocity = new Vector2(direction.x, direction.y);
